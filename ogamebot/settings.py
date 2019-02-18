@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'ogamebot.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("OGAMEBOT_MYSQL_DB", "ogamebot_db"),
+        'USER': os.getenv("OGAMEBOT_MYSQL_USER", "ogamebot"),
+        'PASSWORD': os.getenv("OGAMEBOT_MYSQL_PASSWORD", "supersafepw"),
+        'HOST': os.getenv("OGAMEBOT_MYSQL_HOST", "localhost"),
+        'PORT': int(os.getenv("OGAMEBOT_MYSQL_PORT", "3306"))
     }
 }
 
