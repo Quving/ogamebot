@@ -1,10 +1,15 @@
+import json
 import os
 import platform
-from pprint import pprint
 
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+
+
+def toJson(data):
+    with open("becks.json", "w") as file:
+        file.write(json.dumps(data, ensure_ascii=False, indent=4))
 
 
 class Crawler:
@@ -137,5 +142,5 @@ if __name__ == '__main__':
     username, password = os.getenv("OGAME_USERNAME"), os.getenv("OGAME_PASSWORD")
     crawler = Crawler(username=username, password=password)
     crawler.crawl()
-    pprint(crawler.report)
+    toJson(crawler.report)
     crawler.quit()

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
 APPS = [
     'account.apps.AccountConfig',
     'mine.apps.MineConfig',
+    'bot.apps.BotConfig',
     'fleet.apps.FleetConfig',
     'inventory.apps.InventoryConfig',
     'planet.apps.PlanetConfig'
@@ -124,4 +127,23 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = '/static/'
+
+# Celery application definition
+REDIS_HOST = os.getenv("REDIS_DB_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_DB_PORT", "6379")
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+
+# Other Celery settings
+CELERY_BEAT_SCHEDULE = {
+    'task-number-one': {
+        'task': 'bot.tasks.crawl',
+        'schedule': crontab(),
+    },
+}
+
