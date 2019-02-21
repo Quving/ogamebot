@@ -7,3 +7,6 @@ class Account(models.Model):
     owner = models.ForeignKey(User, related_name='accounts', on_delete=models.CASCADE)
     username = models.CharField(default="", max_length=24)
     password = models.CharField(default="", max_length=24)
+
+    def __str__ (self):
+        return self.username

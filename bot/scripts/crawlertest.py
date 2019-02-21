@@ -6,7 +6,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from account.models import Account
-
+from inventory.models import Inventory
+from mine.models import MetalMine, DeuteriumMine, CrystalMine, SolarPowerstation, FusionReactor, SolarSatellite
+from planet.models import Planet
 
 def toJson(data):
     with open("becks.json", "w") as file:
@@ -14,9 +16,10 @@ def toJson(data):
 
 
 class Crawler:
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
+    def __init__(self, account):
+        self.account = account
+        self.username = account.username
+        self.password = account.password
         self.is_logged_in = False
         self.login_url = "https://lobby.ogame.gameforge.com/de_DE/?language=de"
         self.base_login_url = 'https://s158-de.ogame.gameforge.com'
@@ -54,12 +57,21 @@ class Crawler:
         if not self.is_logged_in:
             self.login()
         planet_ids = self.crawl_planet_ids()
+
         report = {}
 
         for planet_id in planet_ids:
+            # Create planet object
+            planet, created = Planet.objects.get_or_create(
+                id=planet_id,
+                account=self.account
+            )
+            planet.save()
+
             report[planet_id] = {"main": False}
-            report[planet_id]["resources"] = self.crawl_resources(planet_id)
-            report[planet_id]["inventory"] = self.crawl_inventory(planet_id)
+            report[planet_id]["resources"] = self.crawl_mines(planet)
+            report[planet_id]["inventory"] = self.crawl_inventory(planet)
+            planet.save()
 
         # Set first planet as main
         report[planet_ids[0]]["main"] = True
@@ -81,11 +93,12 @@ class Crawler:
 
         return planet_ids
 
-    def crawl_inventory(self, planet_id):
+    def crawl_inventory(self, planet):
         """
         Crawls the planets inventory (metal, crystal, darkmatter energy)
         and stores it as class attribute 'inventory_report'.
         """
+        planet_id = planet.id
         if not self.is_logged_in:
             self.login()
 
@@ -104,21 +117,30 @@ class Crawler:
             "energy": float(resource_energy)
         }
 
+        inventory, created = Inventory.objects.get_or_create(planet=planet,
+                                                             metal=resource_metal,
+                                                             crystal=resource_crystal,
+                                                             deuterium=resource_deuterium,
+                                                             dark_matter=resource_darkmatter,
+                                                             energy=resource_energy)
+        inventory.save()
         return inventory_report
 
-    def crawl_resources(self, planet_id):
+    def crawl_mines(self, planet):
         """
         Crawls the planets' resources (mines) and stores them as class attribute 'resource_report'."
         :return:
         """
+        planet_id = planet.id
         if not self.is_logged_in:
             self.login()
-        resource_ids = ["iron_mine",
-                        "crystal_mine",
-                        "deuterium_mine",
-                        "solar_power_station",
-                        "fusion_reactor",
-                        "solar_satellite"]
+
+        resource_ids = ["MetalMine",
+                        "CrystalMine",
+                        "DeuteriumMine",
+                        "SolarPowerstation",
+                        "FusionReactor",
+                        "SolarSatellite"]
         self.goto(view_id="resources", planet_id=planet_id)
 
         resource_report = dict()
@@ -133,14 +155,46 @@ class Crawler:
                 "level": level,
                 "upgradeable": upgradeable
             }
+            if i == 1:
+                mine, created = MetalMine.objects.get_or_create(planet=planet,
+                                                                upgradeable=upgradeable,
+                                                                name=resource_name,
+                                                                level=level)
+            elif i == 2:
+                mine, created = CrystalMine.objects.get_or_create(planet=planet,
+                                                                  upgradeable=upgradeable,
+                                                                  name=resource_name,
+                                                                  level=level)
+            elif i == 3:
+                mine, created = DeuteriumMine.objects.get_or_create(planet=planet,
+                                                                    upgradeable=upgradeable,
+                                                                    name=resource_name,
+                                                                    level=level)
+            elif i == 4:
+                mine, created = SolarSatellite.objects.get_or_create(planet=planet,
+                                                                     upgradeable=upgradeable,
+                                                                     name=resource_name,
+                                                                     level=level)
+            elif i == 5:
+                mine, created = FusionReactor.objects.get_or_create(planet=planet,
+                                                                    upgradeable=upgradeable,
+                                                                    name=resource_name,
+                                                                    level=level)
+            else:
+                mine, created = SolarSatellite.objects.get_or_create(planet=planet,
+                                                                     upgradeable=upgradeable,
+                                                                     name=resource_name,
+                                                                     level=level)
+            mine.save()
         return resource_report
 
     def quit(self):
         self.driver.quit()
 
 
-for account in Account.objects.all():
-    crawler = Crawler(username=account.username, password=account.password)
-    crawler.crawl()
-    toJson(crawler.report)
-    crawler.quit()
+def run():
+    for account in Account.objects.all():
+        crawler = Crawler(account)
+        crawler.crawl()
+        toJson(crawler.report)
+        crawler.quit()
