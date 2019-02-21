@@ -1,60 +1,12 @@
-import os
-import json
-import platform
-
-from selenium import webdriver
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-
-from account.models import Account
+from bot.services.interactor import Interactor
 from inventory.models import Inventory
 from mine.models import MetalMine, DeuteriumMine, CrystalMine, SolarPowerstation, FusionReactor, SolarSatellite
 from planet.models import Planet
 
 
-class MyWebdriver:
-    def __init__(self, remote=True):
-        if not remote and platform.system() == "Darwin":
-            options = webdriver.ChromeOptions()
-            options.binary_location = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
-            self.driver = webdriver.Chrome(chrome_options=options)
-        else:
-            selenium_hub_host = os.getenv("SELENIUM_HUB_HOST")
-            selenium_hub_url = "http://" + selenium_hub_host + "/wd/hub"
-            self.driver = webdriver.Remote(command_executor=selenium_hub_url,
-                                           desired_capabilities={'browserName': 'firefox'})
-        self.driver.implicitly_wait(10)
-
-
-class Crawler:
+class Crawler(Interactor):
     def __init__(self, account, driver):
-        self.driver = driver
-        self.account = account
-        self.username = account.username
-        self.password = account.password
-        self.is_logged_in = False
-        self.login_url = "https://lobby.ogame.gameforge.com/de_DE/?language=de"
-        self.base_login_url = 'https://s158-de.ogame.gameforge.com'
-        self.report = {}
-
-    def goto(self, view_id="", planet_id=""):
-        if not self.is_logged_in:
-            self.login()
-
-        self.driver.get(self.base_login_url + '/game/index.php?page=' + view_id + '&cp=' + planet_id)
-
-    def login(self):
-        self.driver.get(self.login_url)
-        assert "OGame" in self.driver.title
-        self.driver.find_element_by_id("ui-id-1").click()
-        self.driver.find_element_by_id("usernameLogin").send_keys(self.username)
-        self.driver.find_element_by_id("passwordLogin").send_keys(self.password)
-        self.driver.find_element_by_id("loginSubmit").click()
-        WebDriverWait(self.driver, 15).until(EC.title_is("OGame Lobby"))
-        self.driver.find_element_by_css_selector("button.button.button-default").click()
-        self.driver.switch_to.window(self.driver.window_handles[1])
-        WebDriverWait(self.driver, 15).until(EC.title_is("Fenrir OGame"))
-        self.is_logged_in = True
+        Interactor.__init__(self, account, driver)
 
     def crawl(self):
         """
@@ -63,6 +15,12 @@ class Crawler:
         """
         if not self.is_logged_in:
             self.login()
+
+        playername = self.crawl_playername()
+
+        self.account.playername = playername
+        self.account.save()
+
         planet_ids = self.crawl_planet_ids()
 
         report = {}
@@ -83,6 +41,13 @@ class Crawler:
         # Set first planet as main
         report[planet_ids[0]]["main"] = True
         self.report = report
+
+    def crawl_playername(self):
+        if not self.is_logged_in:
+            self.login()
+
+        playername = self.driver.find_element_by_css_selector("#playerName span").text
+        return playername
 
     def crawl_planet_ids(self):
         """
@@ -190,22 +155,3 @@ class Crawler:
                                                                      level=level)
             mine.save()
         return resource_report
-
-
-def toJson(data):
-    with open("becks.json", "w") as file:
-        file.write(json.dumps(data, ensure_ascii=False, indent=4))
-
-
-def run():
-    for account in Account.objects.all():
-        # Create driver
-        mywebdriver = MyWebdriver(remote=False).driver
-
-        # Crawl Account
-        crawler = Crawler(account, driver=mywebdriver)
-        crawler.crawl()
-        toJson(crawler.report)
-
-        # Close driver
-        mywebdriver.quit()
