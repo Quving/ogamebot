@@ -10,13 +10,24 @@ from inventory.models import Inventory
 from mine.models import MetalMine, DeuteriumMine, CrystalMine, SolarPowerstation, FusionReactor, SolarSatellite
 from planet.models import Planet
 
-def toJson(data):
-    with open("becks.json", "w") as file:
-        file.write(json.dumps(data, ensure_ascii=False, indent=4))
+
+class MyWebdriver:
+    def __init__(self, remote=True):
+        if not remote and platform.system() == "Darwin":
+            options = webdriver.ChromeOptions()
+            options.binary_location = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            selenium_hub_host = "http://grapefruit.quving.com:4444"
+            selenium_hub_url = selenium_hub_host + "/wd/hub"
+            self.driver = webdriver.Remote(command_executor=selenium_hub_url,
+                                           desired_capabilities={'browserName': 'firefox'})
+        self.driver.implicitly_wait(10)
 
 
 class Crawler:
-    def __init__(self, account):
+    def __init__(self, account, driver):
+        self.driver = driver
         self.account = account
         self.username = account.username
         self.password = account.password
@@ -24,11 +35,6 @@ class Crawler:
         self.login_url = "https://lobby.ogame.gameforge.com/de_DE/?language=de"
         self.base_login_url = 'https://s158-de.ogame.gameforge.com'
         self.report = {}
-        if platform.system() == "Darwin":
-            options = webdriver.ChromeOptions()
-            options.binary_location = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
-            self.driver = webdriver.Chrome(chrome_options=options)
-        self.driver.implicitly_wait(10)
 
     def goto(self, view_id="", planet_id=""):
         if not self.is_logged_in:
@@ -135,12 +141,8 @@ class Crawler:
         if not self.is_logged_in:
             self.login()
 
-        resource_ids = ["MetalMine",
-                        "CrystalMine",
-                        "DeuteriumMine",
-                        "SolarPowerstation",
-                        "FusionReactor",
-                        "SolarSatellite"]
+        resource_ids = ["MetalMine", "CrystalMine", "DeuteriumMine",
+                        "SolarPowerstation", "FusionReactor", "SolarSatellite"]
         self.goto(view_id="resources", planet_id=planet_id)
 
         resource_report = dict()
@@ -171,10 +173,10 @@ class Crawler:
                                                                     name=resource_name,
                                                                     level=level)
             elif i == 4:
-                mine, created = SolarSatellite.objects.get_or_create(planet=planet,
-                                                                     upgradeable=upgradeable,
-                                                                     name=resource_name,
-                                                                     level=level)
+                mine, created = SolarPowerstation.objects.get_or_create(planet=planet,
+                                                                        upgradeable=upgradeable,
+                                                                        name=resource_name,
+                                                                        level=level)
             elif i == 5:
                 mine, created = FusionReactor.objects.get_or_create(planet=planet,
                                                                     upgradeable=upgradeable,
@@ -188,13 +190,21 @@ class Crawler:
             mine.save()
         return resource_report
 
-    def quit(self):
-        self.driver.quit()
+
+def toJson(data):
+    with open("becks.json", "w") as file:
+        file.write(json.dumps(data, ensure_ascii=False, indent=4))
 
 
 def run():
     for account in Account.objects.all():
-        crawler = Crawler(account)
+        # Create driver
+        mywebdriver = MyWebdriver(remote=False).driver
+
+        # Crawl Account
+        crawler = Crawler(account, driver=mywebdriver)
         crawler.crawl()
         toJson(crawler.report)
-        crawler.quit()
+
+        # Close driver
+        mywebdriver.quit()
