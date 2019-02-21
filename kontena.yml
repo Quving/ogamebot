@@ -1,0 +1,32 @@
+---
+stack: vngu/ogame
+version: '0.0.1'
+description: ogame
+services:
+  bot:
+    image: pingu/ogamebot:latest
+    environment:
+      - KONTENA_LB_INTERNAL_PORT=8000
+      - KONTENA_LB_VIRTUAL_HOSTS=ogamebot.quving.com
+      - TZ=Europe/Berlin
+    links:
+      - system/lb
+    secrets:
+      - secret: OGAMEBOT_SECRET_KEY
+        name: OGAMEBOT_SECRET_KEY
+        type: env
+      - secret: OGAMEBOT_MYSQL_DB
+        name: OGAMEBOT_MYSQL_DB
+        type: env
+      - secret: OGAMEBOT_MYSQL_USER
+        name: OGAMEBOT_MYSQL_USER
+        type: env
+      - secret: OGAMEBOT_MYSQL_PASSWORD
+        name: OGAMEBOT_MYSQL_PASSWORD
+        type: env
+      - secret: OGAMEBOT_MYSQL_HOST
+        name: OGAMEBOT_MYSQL_HOST
+        type: env
+      - secret: OGAMEBOT_MYSQL_PORT
+        name: OGAMEBOT_MYSQL_PORT
+        type: env
