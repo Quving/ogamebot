@@ -21,17 +21,17 @@ class Crawler(Interactor):
         self.account.playername = playername
         self.account.save()
 
-        planet_ids = self.crawl_planet_ids()
+        planet_ids, planet_names = self.crawl_planets()
 
         report = {}
 
-        for planet_id in planet_ids:
+        for (planet_id, planet_name) in zip(planet_ids, planet_names):
             # Create planet object
             planet, created = Planet.objects.get_or_create(
                 id=planet_id,
+                name=planet_name,
                 account=self.account
             )
-            planet.save()
 
             report[planet_id] = {"main": False}
             report[planet_id]["resources"] = self.crawl_mines(planet)
@@ -49,21 +49,26 @@ class Crawler(Interactor):
         playername = self.driver.find_element_by_css_selector("#playerName span").text
         return playername
 
-    def crawl_planet_ids(self):
+    def crawl_planets(self):
         """
         Crawls the planet_ids and stores them in the attributes.
         :return:
         """
         if not self.is_logged_in:
             self.login()
-        planets_css = self.driver.find_elements_by_css_selector("#planetList .smallplanet")
-        planet_ids = []
-        for planet_css in planets_css:
+
+        planet_css = self.driver.find_elements_by_css_selector("#planetList .smallplanet")
+        planet_names_css = self.driver.find_elements_by_css_selector("#planetList .smallplanet .planet-name")
+        planet_ids, planet_names = [], []
+
+        for (planet_css, planet_name_css) in zip(planet_css, planet_names_css):
             id_complete = planet_css.get_attribute("id")
             id_str = "".join([s for s in id_complete if s.isdigit()])
+            name_str = planet_css.text
             planet_ids.append(id_str)
+            planet_names.append(name_str)
 
-        return planet_ids
+        return planet_ids, planet_names
 
     def crawl_inventory(self, planet):
         """

@@ -5,4 +5,4 @@ from planet.models import Planet
 
 
 class Fleet(models.Model):
-    planet = models.ForeignKey(Planet, on_delete=models.CASCADE)
+    planet = models.ForeignKey(Planet, related_name='fleet', on_delete=models.CASCADE)

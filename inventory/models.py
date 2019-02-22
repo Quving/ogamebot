@@ -5,7 +5,7 @@ from planet.models import Planet
 
 
 class Inventory(models.Model):
-    planet = models.ForeignKey(Planet, on_delete=models.CASCADE)
+    planet = models.ForeignKey(Planet, related_name='inventory', on_delete=models.CASCADE)
     metal = models.FloatField(default=0)
     crystal = models.FloatField(default=0)
     deuterium = models.FloatField(default=0)

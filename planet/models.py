@@ -6,5 +6,9 @@ from account.models import Account
 
 class Planet(models.Model):
     id = models.CharField(max_length=50, default="", unique=True, primary_key=True)
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, related_name='planets', on_delete=models.CASCADE)
     name = models.CharField(default="", max_length=16)
+    is_main = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name

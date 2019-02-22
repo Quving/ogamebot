@@ -1,0 +1,154 @@
+{
+    "33710328": {
+        "main": true,
+        "resources": {
+            "MetalMine": {
+                "level": "20",
+                "upgradeable": false
+            },
+            "CrystalMine": {
+                "level": "18",
+                "upgradeable": false
+            },
+            "DeuteriumMine": {
+                "level": "16",
+                "upgradeable": false
+            },
+            "SolarPowerstation": {
+                "level": "20",
+                "upgradeable": false
+            },
+            "FusionReactor": {
+                "level": "8",
+                "upgradeable": false
+            },
+            "SolarSatellite": {
+                "level": "20",
+                "upgradeable": true
+            }
+        },
+        "inventory": {
+            "33710328": {
+                "metal": 112.347,
+                "crystal": 34.635,
+                "deuterium": 103.153,
+                "darkmatter": 11.5,
+                "energy": 166.0
+            }
+        }
+    },
+    "33713568": {
+        "main": false,
+        "resources": {
+            "MetalMine": {
+                "level": "20",
+                "upgradeable": false
+            },
+            "CrystalMine": {
+                "level": "17",
+                "upgradeable": false
+            },
+            "DeuteriumMine": {
+                "level": "16",
+                "upgradeable": false
+            },
+            "SolarPowerstation": {
+                "level": "19",
+                "upgradeable": true
+            },
+            "FusionReactor": {
+                "level": "8",
+                "upgradeable": false
+            },
+            "SolarSatellite": {
+                "level": "20",
+                "upgradeable": true
+            }
+        },
+        "inventory": {
+            "33713568": {
+                "metal": 22.528,
+                "crystal": 16.397,
+                "deuterium": 34.17,
+                "darkmatter": 11.5,
+                "energy": -79.0
+            }
+        }
+    },
+    "33714438": {
+        "main": false,
+        "resources": {
+            "MetalMine": {
+                "level": "20",
+                "upgradeable": false
+            },
+            "CrystalMine": {
+                "level": "16",
+                "upgradeable": false
+            },
+            "DeuteriumMine": {
+                "level": "15",
+                "upgradeable": false
+            },
+            "SolarPowerstation": {
+                "level": "19",
+                "upgradeable": false
+            },
+            "FusionReactor": {
+                "level": "7",
+                "upgradeable": true
+            },
+            "SolarSatellite": {
+                "level": "15",
+                "upgradeable": true
+            }
+        },
+        "inventory": {
+            "33714438": {
+                "metal": 89.486,
+                "crystal": 23.389,
+                "deuterium": 18.759,
+                "darkmatter": 11.5,
+                "energy": -8.0
+            }
+        }
+    },
+    "33715888": {
+        "main": false,
+        "resources": {
+            "MetalMine": {
+                "level": "20",
+                "upgradeable": false
+            },
+            "CrystalMine": {
+                "level": "16",
+                "upgradeable": false
+            },
+            "DeuteriumMine": {
+                "level": "11",
+                "upgradeable": true
+            },
+            "SolarPowerstation": {
+                "level": "19",
+                "upgradeable": false
+            },
+            "FusionReactor": {
+                "level": "6",
+                "upgradeable": false
+            },
+            "SolarSatellite": {
+                "level": "0",
+                "upgradeable": true
+            }
+        },
+        "inventory": {
+            "33715888": {
+                "metal": 43.157,
+                "crystal": 15.18,
+                "deuterium": 1.28,
+                "darkmatter": 11.5,
+                "energy": -31.0
+            }
+        }
+    }
+}

@@ -7,9 +7,9 @@ from planet.models import Planet
 
 
 class Mine(models.Model):
+    planet = models.ForeignKey(Planet, related_name='mines', on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     uptimed_at = models.DateTimeField(default=timezone.now)
-    planet = models.ForeignKey(Planet, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     level = models.IntegerField(default=0)
     upgradeable = models.BooleanField(default=False)
