@@ -1,7 +1,4 @@
-import json
-
 from account.models import Account
-from bot.services.crawler import Crawler
 from bot.services.mywebdriver import MyWebdriver
 from bot.services.stacker import Stacker
 

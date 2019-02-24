@@ -16,3 +16,4 @@ class MyWebdriver:
             self.driver = webdriver.Remote(command_executor=selenium_hub_url,
                                            desired_capabilities={'browserName': 'firefox'})
         self.driver.implicitly_wait(10)
+        self.driver.set_window_size(1800, 900)

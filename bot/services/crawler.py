@@ -1,7 +1,8 @@
+from bot.services import helper
 from bot.services.interactor import Interactor
 from inventory.models import Inventory
 from mine.models import MetalMine, DeuteriumMine, CrystalMine, SolarPowerstation, FusionReactor, SolarSatellite
-from planet.models import Planet
+from planet.models import Planet, Coordinate
 
 
 class Crawler(Interactor):
@@ -27,10 +28,18 @@ class Crawler(Interactor):
 
         for (planet_id, planet_name) in zip(planet_ids, planet_names):
             # Create planet object
+
+            x, y, z = helper.get_coords_from_planet_name(planet_name)
+            planet_coord, created = Coordinate.objects.get_or_create(
+                x=x,
+                y=y,
+                z=z
+            )
             planet, created = Planet.objects.get_or_create(
                 id=planet_id,
                 name=planet_name,
-                account=self.account
+                account=self.account,
+                coord=planet_coord
             )
 
             report[planet_id] = {"main": False}

@@ -11,6 +11,3 @@ class Inventory(models.Model):
     deuterium = models.FloatField(default=0)
     dark_matter = models.FloatField(default=0)
     energy = models.FloatField(default=0)
-
-    def energy_is_positiv(self):
-        return self.energy > 0
