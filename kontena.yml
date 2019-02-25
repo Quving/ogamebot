@@ -4,7 +4,7 @@ version: '0.0.1'
 description: ogame
 services:
   bot:
-    image: pingu/ogamebot:latest
+    image: pingu/ogamebot:master
     environment:
       - KONTENA_LB_INTERNAL_PORT=8000
       - KONTENA_LB_VIRTUAL_HOSTS=ogamebot.quving.com
