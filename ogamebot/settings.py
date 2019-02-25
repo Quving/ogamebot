@@ -132,8 +132,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = '/static/'
 
 # Celery application definition
-REDIS_HOST = os.getenv("REDIS_DB_HOST", "localhost")
-REDIS_PORT = os.getenv("REDIS_DB_PORT", "6379")
+REDIS_HOST = os.getenv("OGAMEBOT_REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", "6379")
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
 CELERY_ACCEPT_CONTENT = ['application/json']

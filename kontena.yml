@@ -12,6 +12,9 @@ services:
     links:
       - system/lb
     secrets:
+      - secret: OGAMEBOT_REDIS_HOST
+        name: OGAMEBOT_REDIS_HOST
+        type: env
       - secret: SELENIUM_HUB_HOST
         name: SELENIUM_HUB_HOST
         type: env
