@@ -1,0 +1,17 @@
+pipeline:
+  publish:
+    image: plugins/docker
+    repo: pingu/ogamebot
+    tags: latest
+    secrets: [ docker_username, docker_password ]
+    when:
+      status: [ success ]
+      branch: [ master, develop ]
+  deploy:
+    image: pingu/drone-plugin-kontena:latest
+    secrets: [ kontena_token, kontena_url, kontena_grid ]
+    kontena_stack: ogame
+    kontena_file: scripts/production/kontena.yml
+    when:
+      status: [ success ]
+      branch: [ master ]

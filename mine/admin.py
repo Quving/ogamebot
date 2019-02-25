@@ -1,8 +1,11 @@
-from django.contrib import admin
-
 # Register your models here.
 from django.contrib.admin import site
 
-from mine.models import Mine
+from mine.models import MetalMine, DeuteriumMine, CrystalMine, SolarSatellite, FusionReactor, SolarPowerstation
 
-site.register(Mine)
+site.register(FusionReactor)
+site.register(MetalMine)
+site.register(DeuteriumMine)
+site.register(CrystalMine)
+site.register(SolarPowerstation)
+site.register(SolarSatellite)
