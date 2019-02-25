@@ -4,6 +4,7 @@ celery==4.2.1
 Django==2.1.5
 django-extensions==2.1.5
 djangorestframework==3.9.1
+gunicorn==19.9.0
 kombu==4.3.0
 mysqlclient==1.4.2.post1
 pytz==2018.9
