@@ -4,14 +4,14 @@ from bot.services.interactor import Interactor
 
 
 class Stacker(Interactor):
-    def __init__(self, account, driver):
-        Interactor.__init__(self, account, driver)
+    def __init__(self, account, driver, logger=None):
+        Interactor.__init__(self, account, driver, logger=logger)
 
     def stack(self):
         if not self.is_logged_in:
             self.login()
 
-        planet_main = self.account.planets.filter(is_main=True)[0]
+        planet_main = self.account.planets.get(is_main=True)
         for planet in self.account.planets.filter(is_main=False):
             self.goto(view_id='fleet1', planet_id=planet.id)
 
@@ -45,6 +45,6 @@ class Stacker(Interactor):
                 if next_btn.get_attribute("class") == 'on':
                     next_btn.click()
                     time.sleep(5)
-                    print("SEND")
+                    self.logger.info("Send fleet to {}".format(planet_main.name))
             else:
-                print("Planet {} is not avaiable for stacking ressources.".format(planet.name))
+                self.logger.info("Planet {} is not avaiable for stacking ressources.".format(planet.name))
