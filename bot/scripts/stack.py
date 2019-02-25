@@ -6,7 +6,7 @@ from bot.services.stacker import Stacker
 def run():
     for account in Account.objects.all():
         # Create driver
-        mywebdriver = MyWebdriver(remote=False).driver
+        mywebdriver = MyWebdriver(remote=True, browser="chrome").driver
 
         # Crawl Account
         stacker = Stacker(account, driver=mywebdriver)
