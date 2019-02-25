@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv("OGAMEBOT_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -144,7 +144,10 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'task-number-one': {
         'task': 'bot.tasks.crawl',
-        'schedule': crontab(),
+        'schedule': crontab(minute='*'),
     },
+    'task-stack': {
+        'task': 'bot.task.stack',
+        'schedule': crontab(hour='*/3')
+    }
 }
-
