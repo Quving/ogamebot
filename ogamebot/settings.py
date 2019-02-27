@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import platform
 
 from celery.schedules import crontab
 
@@ -24,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("OGAMEBOT_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if platform.system() == "Darwin" else False
 
 ALLOWED_HOSTS = ['*']
 
@@ -144,7 +145,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'task-number-one': {
         'task': 'bot.tasks.crawl',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute='*/15'),
     },
     'task-stack': {
         'task': 'bot.task.stack',
