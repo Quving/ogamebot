@@ -148,7 +148,7 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/15'),
     },
     'task-stack': {
-        'task': 'bot.task.stack',
+        'task': 'bot.tasks.stack',
         'schedule': crontab(hour='*/3')
     }
 }
