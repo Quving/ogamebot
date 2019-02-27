@@ -6,8 +6,8 @@ from planet.models import Planet, Coordinate
 
 
 class Crawler(Interactor):
-    def __init__(self, account, driver):
-        Interactor.__init__(self, account, driver)
+    def __init__(self, account, driver, logger):
+        Interactor.__init__(self, account, driver, logger=logger)
 
     def crawl(self):
         """
