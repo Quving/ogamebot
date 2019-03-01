@@ -1,0 +1,58 @@
+version: '3'
+services:
+  bot:
+    build: .
+    ports:
+      - "5000:5000"
+    links:
+      - mysql
+      - hub
+      - redis
+    environment:
+      - OGAMEBOT_REDIS_HOST=redis
+      - SELENIUM_HUB_HOST=hub:4444
+      - OGAME_USERNAME=${OGAME_USERNAME}
+      - OGAME_PASSWORD=${OGAME_PASSWORD}
+      - OGAMEBOT_SECRET_KEY=some-good-secret-key
+      - OGAMEBOT_MYSQL_DB=ogamebot_db
+      - OGAMEBOT_MYSQL_USER=ogamebot
+      - OGAMEBOT_MYSQL_PASSWORD=DSRBchHg10mtfmXZ
+      - OGAMEBOT_MYSQL_HOST=mysql
+      - OGAMEBOT_MYSQL_PORT=3306
+  hub:
+    image: selenium/hub:3.141.59
+    ports:
+      - 5900:5900
+    volumes:
+      - /dev/shm:/dev/shm
+    environment:
+      - GRID_MAX_SESSION=3
+      - GRID_TIMEOUT=60
+
+  node-chrome:
+    image: selenium/node-chrome-debug:3.141.59
+    volumes:
+      - /dev/shm:/dev/shm
+    links:
+      - hub
+    environment:
+      - SCREEN_WIDTH=1920
+      - SCREEN_HEIGHT=1080
+      - NODE_MAX_INSTANCES=3
+      - NODE_MAX_SESSIONS=3
+      - HUB_HOST=hub
+
+  redis:
+    image: redis:4
+    environment:
+      - TZ=Europe/Berlin
+
+  mysql:
+    image: mysql:5.7.8
+    environment:
+      - TZ=Europe/Berlin
+      - MYSQL_ROOT_PASSWORD=8sR22pywrS446wdVIa
+      - MYSQL_DATABASE=ogamebot_db
+      - MYSQL_USER=ogamebot
+      - MYSQL_PASSWORD=DSRBchHg10mtfmXZ
+
