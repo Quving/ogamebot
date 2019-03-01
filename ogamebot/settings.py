@@ -145,10 +145,10 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'task-number-one': {
         'task': 'bot.tasks.crawl',
-        'schedule': crontab(minute='*/15'),
+        'schedule': crontab(minute='0,15,30,45'),
     },
     'task-stack': {
         'task': 'bot.tasks.stack',
-        'schedule': crontab(hour='*/3')
+        'schedule': crontab(hour='0,3,6,9,12,15,18,21')
     }
 }
