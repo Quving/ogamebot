@@ -6,7 +6,7 @@ services:
   bot:
     image: pingu/ogamebot:latest
     environment:
-      - KONTENA_LB_INTERNAL_PORT=7500
+      - KONTENA_LB_INTERNAL_PORT=5000
       - KONTENA_LB_VIRTUAL_HOSTS=ogamebot.quving.com
       - TZ=Europe/Berlin
     links:
