@@ -10,7 +10,9 @@ RUN apt update && \
 	    ca-certificates \
 	    curl \
 	    gnupg2 \
-	    software-properties-common
+	    software-properties-common \
+            nginx
+
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 RUN add-apt-repository \
 	   "deb [arch=amd64] https://download.docker.com/linux/debian \
@@ -22,6 +24,10 @@ RUN apt-get update && \
 WORKDIR /app
 ADD . .
 RUN pip install -r requirements.txt
+
+# Forward request and error logs to docker log collector
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 RUN chmod u+x entrypoint.sh
 CMD ["bash","entrypoint.sh"]
