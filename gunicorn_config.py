@@ -18,7 +18,7 @@
 #       range.
 #
 
-bind = '0.0.0.0:7500'
+bind = 'unix:/app/ogamebot.sock'
 backlog = 2048
 
 #
