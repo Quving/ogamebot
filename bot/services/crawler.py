@@ -6,7 +6,7 @@ from planet.models import Planet, Coordinate
 
 
 class Crawler(Interactor):
-    def __init__(self, account, driver, logger):
+    def __init__(self, account, driver, logger=None):
         Interactor.__init__(self, account, driver, logger=logger)
 
     def crawl(self):
@@ -28,28 +28,33 @@ class Crawler(Interactor):
 
         for (planet_id, planet_name) in zip(planet_ids, planet_names):
             # Create planet object
-
+            self.logger.info("Crawl planet {} (id={}).".format(planet_name, planet_id))
             x, y, z = helper.get_coords_from_planet_name(planet_name)
             planet_coord, created = Coordinate.objects.get_or_create(
                 x=x,
                 y=y,
                 z=z
             )
-            planet, created = Planet.objects.get_or_create(
-                id=planet_id,
-                name=planet_name,
-                account=self.account,
-                coord=planet_coord
-            )
+
+            if Planet.objects.filter(id=planet_id).exists():
+                planet = Planet.objects.get(id=planet_id)
+            else:
+                self.logger.info("New planet {} registered and will be added to db.".format(planet_name))
+                planet = Planet(
+                    id=planet_id,
+                    name=planet_name,
+                    account=self.account,
+                    coord=planet_coord
+                )
+                planet.save()
 
             report[planet_id] = {"main": False}
             report[planet_id]["resources"] = self.crawl_mines(planet)
             report[planet_id]["inventory"] = self.crawl_inventory(planet)
-            planet.save()
 
-        # Set first planet as main
-        report[planet_ids[0]]["main"] = True
-        self.report = report
+            # Set first planet as main
+            report[planet_ids[0]]["main"] = True
+            self.report = report
 
     def crawl_playername(self):
         if not self.is_logged_in:
@@ -74,8 +79,8 @@ class Crawler(Interactor):
             id_complete = planet_css.get_attribute("id")
             id_str = "".join([s for s in id_complete if s.isdigit()])
             name_str = planet_css.text
-            planet_ids.append(id_str)
-            planet_names.append(name_str)
+            planet_ids.append(int(id_str))
+            planet_names.append(name_str.strip().replace("\n", ""))
 
         return planet_ids, planet_names
 

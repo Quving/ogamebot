@@ -1,5 +1,7 @@
 import time
 
+from selenium.common.exceptions import NoSuchElementException
+
 from bot.services.interactor import Interactor
 
 
@@ -16,7 +18,7 @@ class Stacker(Interactor):
             self.goto(view_id='fleet1', planet_id=planet.id)
 
             # If ships are available.
-            if self.driver.find_element_by_css_selector('#button203').get_attribute('class') == 'on':
+            if self.is_fleet_available():
                 self.driver.find_element_by_css_selector("#ship_203").send_keys("10")
 
                 # Continue if possible
@@ -45,6 +47,15 @@ class Stacker(Interactor):
                 if next_btn.get_attribute("class") == 'on':
                     next_btn.click()
                     time.sleep(5)
-                    self.logger.info("Send fleet to {}".format(planet_main.name))
+                    self.logger.info("Send transport fleet from {} to {}".format(planet.name, planet_main.name))
+                else:
+                    self.logger.info(
+                        "Fleet from {} to {} couldn't be sent. Please check it.".format(planet.name, planet_main.name))
             else:
                 self.logger.info("Planet {} is not avaiable for stacking ressources.".format(planet.name))
+
+    def is_fleet_available(self):
+        try:
+            return self.driver.find_element_by_css_selector('#button203').get_attribute('class') == 'on'
+        except NoSuchElementException:
+            return False

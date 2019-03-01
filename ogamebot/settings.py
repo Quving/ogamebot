@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("OGAMEBOT_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if platform.system() == "Darwin" else False
+DEBUG = True if platform.system() == "Darwin" else False
 
 ALLOWED_HOSTS = ['*']
 

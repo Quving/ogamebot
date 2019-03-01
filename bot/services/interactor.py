@@ -29,7 +29,11 @@ class Interactor:
         if not self.is_logged_in:
             self.login()
 
-        self.driver.get(self.base_login_url + '/game/index.php?page=' + view_id + '&cp=' + planet_id)
+        self.driver.get('{}/game/index.php?page={}&cp={}'.format(
+            self.base_login_url,
+            view_id,
+            planet_id
+        ))
 
     def login(self):
         self.logger.info("Log {} in.".format(self.account.playername))

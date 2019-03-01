@@ -14,9 +14,9 @@ class Coordinate(models.Model):
 
 
 class Planet(models.Model):
-    id = models.CharField(max_length=50, default="", unique=True, primary_key=True)
+    id = models.IntegerField(unique=True, primary_key=True)
     account = models.ForeignKey(Account, related_name='planets', on_delete=models.CASCADE)
-    name = models.CharField(default="", max_length=16)
+    name = models.CharField(default="", max_length=32)
     coord = models.ForeignKey(Coordinate, related_name='planet', on_delete=models.CASCADE)
     is_main = models.BooleanField(default=False)
 
