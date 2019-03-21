@@ -5,7 +5,7 @@ services:
     ports:
       - "5000:5000"
     links:
-      - mysql
+      - postgres
       - hub
       - redis
     environment:
@@ -14,11 +14,12 @@ services:
       - OGAME_USERNAME=${OGAME_USERNAME}
       - OGAME_PASSWORD=${OGAME_PASSWORD}
       - OGAMEBOT_SECRET_KEY=some-good-secret-key
-      - OGAMEBOT_MYSQL_DB=ogamebot_db
-      - OGAMEBOT_MYSQL_USER=ogamebot
-      - OGAMEBOT_MYSQL_PASSWORD=DSRBchHg10mtfmXZ
-      - OGAMEBOT_MYSQL_HOST=mysql
-      - OGAMEBOT_MYSQL_PORT=3306
+      - OGAMEBOT_POSTGRES_DB=ogamebot_db
+      - OGAMEBOT_POSTGRES_USER=ogamebot
+      - OGAMEBOT_POSTGRES_PASSWORD=DSRBchHg10mtfmXZ
+      - OGAMEBOT_POSTGRES_HOST=postgres
+      - OGAMEBOT_POSTGRES_PORT=3306
+
   hub:
     image: selenium/hub:3.141.59
     ports:
@@ -44,15 +45,18 @@ services:
 
   redis:
     image: redis:4
+    ports:
+      - 6379:6379
     environment:
       - TZ=Europe/Berlin
 
-  mysql:
-    image: mysql:5.7.8
+  postgres:
+    image: postgres:11
+    ports:
+      - 5432:5432
     environment:
       - TZ=Europe/Berlin
-      - MYSQL_ROOT_PASSWORD=8sR22pywrS446wdVIa
-      - MYSQL_DATABASE=ogamebot_db
-      - MYSQL_USER=ogamebot
-      - MYSQL_PASSWORD=DSRBchHg10mtfmXZ
-
+      - POSTGRES_ROOT_PASSWORD=8sR22pywrS446wdVIa
+      - POSTGRES_DB=ogamebot_db
+      - POSTGRES_USER=ogamebot
+      - POSTGRES_PASSWORD=DSRBchHg10mtfmXZ
