@@ -41,7 +41,7 @@ services:
       - node==grapefruit
     stateful: yes
     volumes:
-      - /srv/mysql/5.7.8:/data/db
+      - /srv/ogamebot/mysql/5.7.8:/data/db
     links:
       - system/lb
     environment:
