@@ -94,18 +94,18 @@ class Crawler(Interactor):
             self.login()
 
         inventory_report = dict()
-        resource_metal = self.driver.find_element_by_id('resources_metal').text
-        resource_crystal = self.driver.find_element_by_id('resources_crystal').text
-        resource_deuterium = self.driver.find_element_by_id('resources_deuterium').text
-        resource_darkmatter = self.driver.find_element_by_id('resources_darkmatter').text
-        resource_energy = self.driver.find_element_by_id('resources_energy').text
+        resource_metal = self.driver.find_element_by_id('resources_metal').text.replace('.', '')
+        resource_crystal = self.driver.find_element_by_id('resources_crystal').text.replace('.', '')
+        resource_deuterium = self.driver.find_element_by_id('resources_deuterium').text.replace('.', '')
+        resource_darkmatter = self.driver.find_element_by_id('resources_darkmatter').text.replace('.', '')
+        resource_energy = self.driver.find_element_by_id('resources_energy').text.replace('.', '')
 
         inventory_report[planet_id] = {
-            "metal": float(resource_metal),
-            "crystal": float(resource_crystal),
-            "deuterium": float(resource_deuterium),
-            "darkmatter": float(resource_darkmatter),
-            "energy": float(resource_energy)
+            "metal": int(resource_metal),
+            "crystal": int(resource_crystal),
+            "deuterium": int(resource_deuterium),
+            "darkmatter": int(resource_darkmatter),
+            "energy": int(resource_energy)
         }
 
         inventory, created = Inventory.objects.get_or_create(planet=planet,
