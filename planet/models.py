@@ -19,6 +19,7 @@ class Planet(models.Model):
     name = models.CharField(default="", max_length=32)
     coord = models.ForeignKey(Coordinate, related_name='planet', on_delete=models.CASCADE)
     is_main = models.BooleanField(default=False)
+    builder_enabled = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
