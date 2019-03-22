@@ -14,7 +14,7 @@ services:
       - OGAMEBOT_MYSQL_HOST=mysql
       - OGAMEBOT_REDIS_HOST=redis
     links:
-      - system/lb
+      - lb/lb
       - mysql
       - redis
     secrets:
@@ -43,7 +43,7 @@ services:
     volumes:
       - /srv/ogamebot/mysql/5.7.8:/data/db
     links:
-      - system/lb
+      - lb/lb
     environment:
       - TZ=Europe/Berlin
       - MYSQL_USER=ogamebot
@@ -68,7 +68,7 @@ services:
       - node==grapefruit
     stateful: yes
     links:
-      - system/lb
+      - lb/lb
     environment:
       - TZ=Europe/Berlin
 
