@@ -17,7 +17,7 @@ services:
       - OGAMEBOT_REDIS_HOST=redis
     links:
       - lb/lb
-      - mysql
+      - postgres
       - redis
     secrets:
       - secret: SELENIUM_HUB_HOST
