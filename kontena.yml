@@ -16,8 +16,8 @@ services:
       - OGAMEBOT_POSTGRES_DB=ogamebot_db
       - OGAMEBOT_REDIS_HOST=redis
     links:
-      - system/lb
-      - postgres
+      - lb/lb
+      - mysql
       - redis
     secrets:
       - secret: SELENIUM_HUB_HOST
@@ -39,7 +39,7 @@ services:
     volumes:
       - /srv/ogamebot/postgres:/data/db
     links:
-      - system/lb
+      - lb/lb
     environment:
       - TZ=Europe/Berlin
       - POSTGRES_USER=ogamebot
@@ -56,7 +56,7 @@ services:
       - node==grapefruit
     stateful: yes
     links:
-      - system/lb
+      - lb/lb
     environment:
       - TZ=Europe/Berlin
 
