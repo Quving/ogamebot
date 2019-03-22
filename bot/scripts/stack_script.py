@@ -5,12 +5,13 @@ from bot.services.stacker import Stacker
 
 def run():
     for account in Account.objects.all():
-        # Create driver
-        mywebdriver = MyWebdriver(remote=True, browser="chrome").driver
+        if account.bot.stacker_enabled:
+            # Create driver
+            mywebdriver = MyWebdriver(remote=True, browser="chrome").driver
 
-        # Crawl Account
-        stacker = Stacker(account, driver=mywebdriver)
-        stacker.stack()
+            # Crawl Account
+            stacker = Stacker(account, driver=mywebdriver)
+            stacker.stack()
 
-        # Close driver
-        mywebdriver.quit()
+            # Close driver
+            mywebdriver.quit()

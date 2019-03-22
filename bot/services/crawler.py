@@ -30,11 +30,7 @@ class Crawler(Interactor):
             # Create planet object
             self.logger.info("Crawl planet {} (id={}).".format(planet_name, planet_id))
             x, y, z = helper.get_coords_from_planet_name(planet_name)
-            planet_coord, created = Coordinate.objects.get_or_create(
-                x=x,
-                y=y,
-                z=z
-            )
+            planet_coord, created = Coordinate.objects.get_or_create(x=x, y=y, z=z)
 
             if Planet.objects.filter(id=planet_id).exists():
                 planet = Planet.objects.get(id=planet_id)

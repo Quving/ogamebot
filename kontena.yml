@@ -11,11 +11,13 @@ services:
       - KONTENA_LB_INTERNAL_PORT=5000
       - KONTENA_LB_VIRTUAL_HOSTS=ogamebot.quving.com
       - TZ=Europe/Berlin
-      - OGAMEBOT_MYSQL_HOST=mysql
+      - OGAMEBOT_POSTGRES_HOST=postgres
+      - OGAMEBOT_POSTGRES_USER=ogamebot
+      - OGAMEBOT_POSTGRES_DB=ogamebot_db
       - OGAMEBOT_REDIS_HOST=redis
     links:
       - lb/lb
-      - mysql
+      - postgres
       - redis
     secrets:
       - secret: SELENIUM_HUB_HOST
@@ -24,41 +26,27 @@ services:
       - secret: OGAMEBOT_SECRET_KEY
         name: OGAMEBOT_SECRET_KEY
         type: env
-      - secret: OGAMEBOT_MYSQL_DB
-        name: OGAMEBOT_MYSQL_DB
-        type: env
-      - secret: OGAMEBOT_MYSQL_USER
-        name: OGAMEBOT_MYSQL_USER
-        type: env
-      - secret: OGAMEBOT_MYSQL_PASSWORD
-        name: OGAMEBOT_MYSQL_PASSWORD
+      - secret: OGAMEBOT_POSTGRES_PASSWORD
+        name: OGAMEBOT_POSTGRES_PASSWORD
         type: env
 
-  mysql:
-    image: mysql:5.7.8
+  postgres:
+    image: postgres:11
     instances: 1
     affinity:
       - node==grapefruit
     stateful: yes
     volumes:
-      - /srv/ogamebot/mysql/5.7.8:/data/db
+      - /srv/ogamebot/postgres:/data/db
     links:
       - lb/lb
     environment:
       - TZ=Europe/Berlin
-      - MYSQL_USER=ogamebot
+      - POSTGRES_USER=ogamebot
+      - POSTGRES_DB=ogamebot_db
     secrets:
-      - secret: OGAMEBOT_MYSQL_DB
-        name: MYSQL_DATABASE
-        type: env
-      - secret: OGAMEBOT_MYSQL_USER
-        name: MYSQL_USER
-        type: env
-      - secret: OGAMEBOT_MYSQL_PASSWORD
-        name: MYSQL_PASSWORD
-        type: env
-      - secret: MYSQL_ROOT_PASSWORD
-        name: MYSQL_ROOT_PASSWORD
+      - secret: OGAMEBOT_POSTGRES_PASSWORD
+        name: POSTGRES_PASSWORD
         type: env
 
   redis:

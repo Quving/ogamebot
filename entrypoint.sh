@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+python manage.py migrate
+
 celery -A ogamebot worker -l info -B >> celery.log 2>&1 &
 
 echo 'yes' | python manage.py collectstatic --clear
