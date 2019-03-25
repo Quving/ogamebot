@@ -15,26 +15,28 @@ logger = get_task_logger(__name__)
 def crawl():
     logger.info("Update accounts...")
     for account in Account.objects.all():
-        # Create driver
-        mywebdriver = MyWebdriver(remote=True, browser="chrome").driver
+        if account.bot.crawler_enabled:
+            # Create driver
+            mywebdriver = MyWebdriver(remote=True, browser="chrome").driver
 
-        # Crawl Account
-        crawler = Crawler(account, driver=mywebdriver, logger=logger)
-        crawler.crawl()
+            # Crawl Account
+            crawler = Crawler(account, driver=mywebdriver, logger=logger)
+            crawler.crawl()
 
-        # Close driver
-        mywebdriver.quit()
+            # Close driver
+            mywebdriver.quit()
 
 
 @task()
 def stack():
     for account in Account.objects.all():
-        # Create driver
-        mywebdriver = MyWebdriver(remote=True, browser="chrome").driver
+        if account.bot.stacker_enabled:
+            # Create driver
+            mywebdriver = MyWebdriver(remote=True, browser="chrome").driver
 
-        # Crawl Account
-        stacker = Stacker(account, driver=mywebdriver, logger=logger)
-        stacker.stack()
+            # Crawl Account
+            stacker = Stacker(account, driver=mywebdriver, logger=logger)
+            stacker.stack()
 
-        # Close driver
-        mywebdriver.quit()
+            # Close driver
+            mywebdriver.quit()
