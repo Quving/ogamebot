@@ -19,7 +19,7 @@ class Stacker(Interactor):
 
             # If ships are available.
             if self.is_fleet_available():
-                self.driver.find_element_by_css_selector("#ship_203").send_keys("10")
+                self.driver.find_element_by_css_selector("#ship_203").send_keys("20")
 
                 # Continue if possible
                 next_btn = self.driver.find_element_by_css_selector('#continue')
