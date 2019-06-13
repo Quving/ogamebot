@@ -8,7 +8,7 @@ class MyWebdriver:
     def __init__(self, remote=True, browser="chrome"):
         if not remote and platform.system() == "Darwin":
             options = webdriver.ChromeOptions()
-            options.binary_location = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
+            options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
             options.add_argument("--kiosk");
             self.driver = webdriver.Chrome(chrome_options=options)
         elif remote and browser == "firefox":
